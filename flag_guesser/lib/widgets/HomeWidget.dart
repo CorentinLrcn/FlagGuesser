@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:flag_guesser/translation.dart';
+import 'package:flag_guesser/widgets/game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models.dart';
@@ -158,8 +159,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                   child: NeumorphicFloatingActionButton(
                     onPressed: () {
                       //TODO
-                      //Navigator.of(context).push(MaterialPageRoute(
-                      //  builder: ((context) => GameWidget())));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => GameWidget())));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
