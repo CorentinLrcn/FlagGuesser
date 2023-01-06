@@ -1,5 +1,5 @@
-import 'package:flag_guesser/widgets/hello_world.dart';
 import 'package:flutter/material.dart';
+import 'package:flag_guesser/widgets/hello_world.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
