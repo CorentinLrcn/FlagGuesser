@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'HomeWidget.dart';
+
 class HelloWorldWidget extends StatelessWidget {
   const HelloWorldWidget({super.key});
 
@@ -7,8 +9,14 @@ class HelloWorldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const Center(
-        child: Text('Hello World'),
+      body: Center(
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => HomeWidget())));
+          },
+          child: const Text('Hello World'),
+        ),
       ),
     );
   }

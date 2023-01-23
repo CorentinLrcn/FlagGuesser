@@ -1,7 +1,12 @@
 class Country {
+  String code;
   String name;
   String flag;
-  Map<String, String> translations;
+  Map<String, dynamic> translations;
 
-  Country({required this.name, required this.flag, required this.translations});
+  Country(
+      {required this.code,
+      required this.name,
+      required this.flag,
+      required this.translations});
 }
