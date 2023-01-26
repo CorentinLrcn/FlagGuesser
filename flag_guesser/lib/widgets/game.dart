@@ -172,12 +172,14 @@ class _GameWidgetState extends State<GameWidget> {
                     const SizedBox(
                       height: 30,
                     ),
-                    Neumorphic(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.1),
-                      child: Center(
-                        child:
-                            Image.network(game[gameIndex].chosenCountry.flag),
+                    SizedBox(
+                      height: 150,
+                      child: Neumorphic(
+                        margin: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.1),
+                        child: Image.network(game[gameIndex].chosenCountry.flag,
+                            fit: BoxFit.fitWidth),
                       ),
                     ),
                     const SizedBox(
