@@ -148,32 +148,45 @@ class _HomeWidgetState extends State<HomeWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Row(
+            Column(
               children: [
-                Expanded(flex: 1, child: Text('')),
-                Expanded(
-                  flex: 4,
-                  child: NeumorphicFloatingActionButton(
-                    onPressed: () {
-                      //TODO
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => GameWidget())));
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Translation.translate("Play", selectedLanguage),
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
-                  ),
+                SizedBox(
+                  height: 300,
+                  width: 300,
+                  child:
+                      Image.asset('images/Flag_guesser-removebg-preview.png'),
                 ),
-                Expanded(flex: 1, child: Text('')),
+                SizedBox(
+                  height: 0,
+                ),
+                Row(
+                  children: [
+                    Expanded(flex: 1, child: Text('')),
+                    Expanded(
+                      flex: 4,
+                      child: NeumorphicFloatingActionButton(
+                        onPressed: () {
+                          //TODO
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: ((context) => GameWidget())));
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              Translation.translate("Play", selectedLanguage),
+                              style: TextStyle(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 1, child: Text('')),
+                  ],
+                ),
               ],
-            ),
+            )
           ],
         ),
       ),
