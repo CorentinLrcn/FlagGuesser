@@ -40,8 +40,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   Future<void> loadCountry() async {
-    const apiUrl =
-        'https://restcountries.com/v2/all?fields=name,flags,translations,alpha2Code';
+    const apiUrl = '$baseUrl/all?fields=name,flags,translations,alpha2Code';
     var response = await http.get(Uri.parse("$apiUrl"));
     List<Country> loadingCountryList = [];
     final json = jsonDecode(utf8.decode(response.bodyBytes));

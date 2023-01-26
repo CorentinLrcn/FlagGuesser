@@ -36,7 +36,6 @@ class _GameWidgetState extends State<GameWidget> {
     List<Round> tmpGame = [];
     for (int i = 0; i < 10; i++) {
       int countryIndex = Random().nextInt(countries!.length);
-      print(countries![countryIndex]);
       int rightAnswerAssigned = Random().nextInt(4);
       Map<String, dynamic> tmpAnswers = {};
       for (int n = 0; n < 4; n++) {
@@ -66,7 +65,6 @@ class _GameWidgetState extends State<GameWidget> {
     final response = await http
         .get(Uri.parse('$baseUrl/all?fields=name,translations,flags'));
     final jsonCountries = jsonDecode(utf8.decode(response.bodyBytes));
-    print(jsonCountries);
 
     List<Country> tmpCount = [];
     for (var jsonCountry in jsonCountries) {
@@ -81,7 +79,6 @@ class _GameWidgetState extends State<GameWidget> {
       countries = tmpCount;
     });
     initGame();
-    print(game);
   }
 
   void revealAnswer(int userAnswer) {
@@ -169,7 +166,7 @@ class _GameWidgetState extends State<GameWidget> {
                           Translation.translate(
                               "To which country this flags belongs ?",
                               selectedLanguage),
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
