@@ -100,6 +100,9 @@ class Translation {
             return "következő";
           case 'HR':
             return "Sljedeći";
+          default:
+            return "Translation not Implemented";
+        }
       case "Game loading...":
         switch (Language) {
           case 'FR':
@@ -154,17 +157,4 @@ class Translation {
         return "Translation not Implemented";
     }
   }
-  /*
-    ('Play', 'FR'): "Jouer",
-    ["Play", "US"]: "Play",
-    ["Play", "ES"]: "Jugar",
-    ["Play", "DE"]: "Spielen",
-    ["Play", "PT"]: "Jogar",
-    ["Play", "BR"]: "Jogar",
-    ["Play", "NL"]: "Speel",
-    ["Play", "IT"]: "Gioco",
-    ["Play", "NL"]: "Jugar",
-    ["Play", "HU"]: "Játsszon",
-  };
-  */
 }

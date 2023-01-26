@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, annotate_overrides, unnecessary_string_interpolations
 
 import 'dart:convert';
-import 'package:flag_guesser/translation.dart';
+import 'package:flag_guesser/utils/translation.dart';
 import 'package:flag_guesser/widgets/game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

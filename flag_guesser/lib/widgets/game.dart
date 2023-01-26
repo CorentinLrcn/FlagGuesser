@@ -6,7 +6,7 @@ import 'package:flag_guesser/utils/globals.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart' as http;
 
-import '../translation.dart';
+import '../utils/translation.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key});
