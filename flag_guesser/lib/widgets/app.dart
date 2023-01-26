@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flag_guesser/widgets/hello_world.dart';
+
+import 'HomeWidget.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,6 +22,6 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: const HelloWorldWidget());
+        home: HomeWidget());
   }
 }

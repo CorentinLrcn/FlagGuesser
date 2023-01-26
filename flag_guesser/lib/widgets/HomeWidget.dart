@@ -39,8 +39,6 @@ class _HomeWidgetState extends State<HomeWidget> {
           prefs?.getString(globalsSelectedLanguagePreferences) ??
               globalsSelectedLanguage;
     });
-    print(globalsSelectedLanguage);
-    print(Translation.translate("Play", globalsSelectedLanguage));
   }
 
   Future<void> loadCountry() async {
@@ -158,7 +156,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                 Expanded(
                   flex: 4,
                   child: NeumorphicFloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //TODO
+                      //Navigator.of(context).push(MaterialPageRoute(
+                      //  builder: ((context) => GameWidget())));
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
