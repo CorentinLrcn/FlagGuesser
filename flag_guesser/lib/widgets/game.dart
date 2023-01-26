@@ -306,9 +306,10 @@ class _GameWidgetState extends State<GameWidget> {
                                       MediaQuery.of(context).size.width * 0.1,
                                   vertical:
                                       MediaQuery.of(context).size.width * 0.05),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  'Suivant',
+                                  Translation.translate(
+                                      "Next", selectedLanguage),
                                 ),
                               ),
                             ),
@@ -321,7 +322,7 @@ class _GameWidgetState extends State<GameWidget> {
                 )
               : Center(
                   child: Column(children: [
-                  const Text('Fin de la partie'),
+                  Text(Translation.translate("Game over", selectedLanguage)),
                   Text('Votre score est de $score/10'),
                 ]))
           : const Center(child: Text('Chargement de la partie')),
