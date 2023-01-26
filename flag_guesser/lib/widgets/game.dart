@@ -189,7 +189,8 @@ class _GameWidgetState extends State<GameWidget> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Text('Votre score : $score / 10'),
+                    Text(
+                        '${Translation.translate("Your score :", selectedLanguage)} $score / 10'),
                     const SizedBox(
                       height: 30,
                     ),
@@ -323,9 +324,14 @@ class _GameWidgetState extends State<GameWidget> {
               : Center(
                   child: Column(children: [
                   Text(Translation.translate("Game over", selectedLanguage)),
-                  Text('Votre score est de $score/10'),
+                  Text(
+                      '${Translation.translate("Your score :", selectedLanguage)} $score/10'),
                 ]))
-          : const Center(child: Text('Chargement de la partie')),
+          : Center(
+              child: Text(
+                Translation.translate("Game loading...", selectedLanguage),
+              ),
+            ),
     );
   }
 }

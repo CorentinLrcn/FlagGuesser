@@ -100,6 +100,53 @@ class Translation {
             return "következő";
           case 'HR':
             return "Sljedeći";
+      case "Game loading...":
+        switch (Language) {
+          case 'FR':
+            return "Chargement de la partie...";
+          case 'US':
+            return "Game loading...";
+          case 'ES':
+            return "Juego cargándose...";
+          case 'DE':
+            return "Spiel läd...";
+          case 'PT':
+            return "Carregando o jogo...";
+          case 'BR':
+            return "Carregando o jogo...";
+          case 'NL':
+            return "Spel aan het laden...";
+          case 'IT':
+            return "Caricamento del gioco...";
+          case 'HU':
+            return "Játék betöltése...";
+          case 'HR':
+            return "Igra se učitava...";
+          default:
+            return "Translation not Implemented";
+        }
+      case "Your score :":
+        switch (Language) {
+          case 'FR':
+            return "Votre score :";
+          case 'US':
+            return "Your score :";
+          case 'ES':
+            return "Tu puntuación :";
+          case 'DE':
+            return "Ihr Ergebnis :";
+          case 'PT':
+            return "Sua pontuação :";
+          case 'BR':
+            return "Sua pontuação :";
+          case 'NL':
+            return "Jouw score :";
+          case 'IT':
+            return "Il vostro punteggio :";
+          case 'HU':
+            return "Pontszámod :";
+          case 'HR':
+            return "Tvoj rezultat :";
           default:
             return "Translation not Implemented";
         }
