@@ -1,1 +1,1 @@
-const baseUrl = 'https://restcountries.com/v2';
+const String baseUrl = 'https://restcountries.com/v2/';

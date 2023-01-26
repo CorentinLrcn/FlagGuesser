@@ -3,11 +3,7 @@ import 'dart:math';
 
 import 'package:flag_guesser/models.dart';
 import 'package:flag_guesser/utils/globals.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
 import 'package:http/http.dart' as http;
 
 class GameWidget extends StatefulWidget {
@@ -18,251 +14,311 @@ class GameWidget extends StatefulWidget {
 }
 
 class _GameWidgetState extends State<GameWidget> {
-  List<Country>? countries = [];
-  List<Round>? game = [];
-  Country? roundCountry;
+  Color? ans1BtnColor = Colors.blueGrey[50];
+  Color? ans2BtnColor = Colors.blueGrey[50];
+  Color? ans3BtnColor = Colors.blueGrey[50];
+  Color? ans4BtnColor = Colors.blueGrey[50];
+  Color? answer1FontColor = Colors.black;
+  Color? answer2FontColor = Colors.black;
+  Color? answer3FontColor = Colors.black;
+  Color? answer4FontColor = Colors.black;
 
+  List<Country>? countries = [];
+  List<Round> game = [];
+  int score = 0;
+
+  bool canGoNext = false;
   int gameIndex = 0;
 
-  Color? answer1btn = Colors.transparent;
-  Color? answer2btn = Colors.transparent;
-  Color? answer3btn = Colors.transparent;
-  Color? answer4btn = Colors.transparent;
-
-  Color? answer1btnText = Colors.black;
-  Color? answer2btnText = Colors.black;
-  Color? answer3btnText = Colors.black;
-  Color? answer4btnText = Colors.black;
-
-  String answer1 = '';
-  String answer2 = '';
-  String answer3 = '';
-  String answer4 = '';
-
-  bool isRevealed = false;
-
-  void startRound() {
-    Country chosenCountry = countries![Random().nextInt(countries!.length)];
-    int rightAnswerPos = Random().nextInt(4);
-    switch (rightAnswerPos) {
-      case 0:
-        setState(() {
-          roundCountry = chosenCountry;
-          answer1 = chosenCountry.name;
-          answer2 = countries![Random().nextInt(countries!.length)].name;
-          answer3 = countries![Random().nextInt(countries!.length)].name;
-          answer4 = countries![Random().nextInt(countries!.length)].name;
-        });
-        break;
-      case 1:
-        setState(() {
-          roundCountry = chosenCountry;
-          answer2 = chosenCountry.name;
-          answer1 = countries![Random().nextInt(countries!.length)].name;
-          answer3 = countries![Random().nextInt(countries!.length)].name;
-          answer4 = countries![Random().nextInt(countries!.length)].name;
-        });
-        break;
-      case 2:
-        setState(() {
-          roundCountry = chosenCountry;
-          answer3 = chosenCountry.name;
-          answer2 = countries![Random().nextInt(countries!.length)].name;
-          answer1 = countries![Random().nextInt(countries!.length)].name;
-          answer4 = countries![Random().nextInt(countries!.length)].name;
-        });
-        break;
-      case 3:
-        setState(() {
-          roundCountry = chosenCountry;
-          answer4 = chosenCountry.name;
-          answer2 = countries![Random().nextInt(countries!.length)].name;
-          answer3 = countries![Random().nextInt(countries!.length)].name;
-          answer1 = countries![Random().nextInt(countries!.length)].name;
-        });
-        break;
+  void initGame() {
+    List<Round> tmpGame = [];
+    for (int i = 0; i < 10; i++) {
+      int countryIndex = Random().nextInt(countries!.length);
+      print(countries![countryIndex]);
+      int rightAnswerAssigned = Random().nextInt(4);
+      Map<String, dynamic> tmpAnswers = {};
+      for (int n = 0; n < 4; n++) {
+        if (n == rightAnswerAssigned) {
+          tmpAnswers.putIfAbsent('answer${n + 1}',
+              () => {'name': countries![countryIndex].name, 'value': 'right'});
+        } else {
+          int fakeAnswerIndex = Random().nextInt(countries!.length);
+          while (fakeAnswerIndex == countryIndex) {
+            fakeAnswerIndex = Random().nextInt(countries!.length);
+          }
+          tmpAnswers.putIfAbsent(
+              'answer${n + 1}',
+              () =>
+                  {'name': countries![fakeAnswerIndex].name, 'value': 'right'});
+        }
+      }
+      tmpGame.add(
+          Round(chosenCountry: countries![countryIndex], choices: tmpAnswers));
     }
-    setState(() {});
-  }
-
-  void revealAnswer() {
     setState(() {
-      answer1btn =
-          (answer1 == roundCountry!.name) ? Colors.green : Colors.red.shade700;
-      answer2btn =
-          (answer2 == roundCountry!.name) ? Colors.green : Colors.red.shade700;
-      answer3btn =
-          (answer3 == roundCountry!.name) ? Colors.green : Colors.red.shade700;
-      answer4btn =
-          (answer4 == roundCountry!.name) ? Colors.green : Colors.red.shade700;
-      isRevealed = true;
+      game = tmpGame;
     });
   }
 
-  void nextRound() {
-    startRound();
-    setState(() {
-      answer1btn = Colors.transparent;
-      answer2btn = Colors.transparent;
-      answer3btn = Colors.transparent;
-      answer4btn = Colors.transparent;
-      isRevealed = false;
-    });
-  }
+  Future<void> getFlagList() async {
+    final response = await http
+        .get(Uri.parse('$baseUrl/all?fields=name,translations,flags'));
+    final jsonCountries = jsonDecode(utf8.decode(response.bodyBytes));
+    print(jsonCountries);
 
-  Future<void> getAllCountries() async {
-    const apiUrl = '$baseUrl/all?fields=name,flags,translations';
-    var response = await http.get(Uri.parse(apiUrl));
-    List<Country> loadingCountryList = [];
-    final json = jsonDecode(utf8.decode(response.bodyBytes));
-    for (var pays in json) {
-      loadingCountryList.add(Country(
-          code: '',
-          name: pays['name'],
-          flag: pays['flags']["png"],
-          translations: pays["translations"] as Map<String, dynamic>));
+    List<Country> tmpCount = [];
+    for (var jsonCountry in jsonCountries) {
+      tmpCount.add(Country(
+        code: '',
+        name: jsonCountry['name'],
+        flag: jsonCountry['flags']['png'],
+        translations: jsonCountry['translations'] as Map<String, dynamic>,
+      ));
     }
-
     setState(() {
-      countries = loadingCountryList;
+      countries = tmpCount;
     });
-    startRound();
+    initGame();
+    print(game);
+  }
+
+  void revealAnswer(int userAnswer) {
+    setState(() {
+      game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer$userAnswer']['name']
+          ? score++
+          : score;
+      ans1BtnColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer1']['name']
+          ? Colors.green
+          : Colors.red.shade900;
+      ans2BtnColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer2']['name']
+          ? Colors.green
+          : Colors.red.shade900;
+      ans3BtnColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer3']['name']
+          ? Colors.green
+          : Colors.red.shade900;
+      ans4BtnColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer4']['name']
+          ? Colors.green
+          : Colors.red.shade900;
+      answer1FontColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer1']['name']
+          ? Colors.black
+          : Colors.white;
+      answer2FontColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer2']['name']
+          ? Colors.black
+          : Colors.white;
+      answer3FontColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer3']['name']
+          ? Colors.black
+          : Colors.white;
+      answer4FontColor = game[gameIndex].chosenCountry.name ==
+              game[gameIndex].choices['answer4']['name']
+          ? Colors.black
+          : Colors.white;
+      canGoNext = !canGoNext;
+    });
+  }
+
+  void hideAnswer() {
+    setState(() {
+      ans1BtnColor = Colors.blueGrey[50];
+      ans2BtnColor = Colors.blueGrey[50];
+      ans3BtnColor = Colors.blueGrey[50];
+      ans4BtnColor = Colors.blueGrey[50];
+      answer1FontColor = Colors.black;
+      answer2FontColor = Colors.black;
+      answer3FontColor = Colors.black;
+      answer4FontColor = Colors.black;
+      gameIndex++;
+      canGoNext = !canGoNext;
+    });
   }
 
   @override
   void initState() {
+    getFlagList();
     super.initState();
-    getAllCountries();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: NeumorphicTheme.baseColor(context),
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       backgroundColor: NeumorphicTheme.baseColor(context),
-      body: (roundCountry == null)
-          ? const Center(
-              child: Text('Chargement en cours...'),
-            )
-          : Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.05,
-                      vertical: 10),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: const Center(
-                    child: Text(
-                      'À quel pays appartient ce drapeau ?',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  child: Center(
-                    child: Image.network(roundCountry!.flag),
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                //const Text('Score : /10'),
-                const SizedBox(
-                  height: 35,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 60,
-                  child: NeumorphicButton(
-                    style: NeumorphicStyle(
-                      color: answer1btn,
-                    ),
-                    padding: EdgeInsets.zero,
-                    child: Center(
-                      child: Text(answer1,
-                          style: TextStyle(color: answer1btnText)),
-                    ),
-                    onPressed: () => revealAnswer(),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 60,
-                  child: NeumorphicButton(
-                    style: NeumorphicStyle(
-                      color: answer2btn,
-                    ),
-                    padding: EdgeInsets.zero,
-                    child: Center(
-                      child: Text(answer2,
-                          style: TextStyle(color: answer2btnText)),
-                    ),
-                    onPressed: () => revealAnswer(),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 60,
-                  child: NeumorphicButton(
-                    style: NeumorphicStyle(
-                      color: answer3btn,
-                    ),
-                    padding: EdgeInsets.zero,
-                    child: Center(
-                      child: Text(answer3,
-                          style: TextStyle(color: answer3btnText)),
-                    ),
-                    onPressed: () => revealAnswer(),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 60,
-                  child: NeumorphicButton(
-                    style: NeumorphicStyle(
-                      color: answer4btn,
-                    ),
-                    padding: EdgeInsets.zero,
-                    child: Center(
-                      child: Text(answer4,
-                          style: TextStyle(color: answer4btnText)),
-                    ),
-                    onPressed: () => revealAnswer(),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                (!isRevealed)
-                    ? const SizedBox()
-                    : SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 60,
-                        child: NeumorphicButton(
-                          padding: EdgeInsets.zero,
-                          child: const Center(
-                            child: Text('Suivant'),
-                          ),
-                          onPressed: () => nextRound(),
+      body: (game.isNotEmpty)
+          ? (gameIndex < game.length)
+              ? Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.05,
+                          vertical: 10),
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: const Center(
+                        child: Text(
+                          'À quel pays appartient ce drapeau ?',
+                          style: TextStyle(fontSize: 20),
                         ),
                       ),
-              ],
-            ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Neumorphic(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.1),
+                      child: Center(
+                        child:
+                            Image.network(game[gameIndex].chosenCountry.flag),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Text('Votre score : $score / 10'),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: NeumorphicButton(
+                        onPressed: () => {canGoNext ? {} : revealAnswer(1)},
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.flat,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(10.0)),
+                          color: ans1BtnColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.1,
+                            vertical: MediaQuery.of(context).size.width * 0.05),
+                        child: Center(
+                          child: Text(
+                            game[gameIndex].choices['answer1']['name'],
+                            style: TextStyle(color: answer1FontColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: NeumorphicButton(
+                        onPressed: () => {canGoNext ? {} : revealAnswer(2)},
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.flat,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(10.0)),
+                          color: ans2BtnColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.1,
+                            vertical: MediaQuery.of(context).size.width * 0.05),
+                        child: Center(
+                          child: Text(
+                            game[gameIndex].choices['answer2']['name'],
+                            style: TextStyle(color: answer2FontColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: NeumorphicButton(
+                        onPressed: () => {canGoNext ? {} : revealAnswer(3)},
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.flat,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(10.0)),
+                          color: ans3BtnColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.1,
+                            vertical: MediaQuery.of(context).size.width * 0.05),
+                        child: Center(
+                          child: Text(
+                            game[gameIndex].choices['answer3']['name'],
+                            style: TextStyle(color: answer3FontColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: NeumorphicButton(
+                        onPressed: () => {canGoNext ? {} : revealAnswer(4)},
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.flat,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(10.0)),
+                          color: ans4BtnColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.1,
+                            vertical: MediaQuery.of(context).size.width * 0.05),
+                        child: Center(
+                          child: Text(
+                            game[gameIndex].choices['answer4']['name'],
+                            style: TextStyle(color: answer4FontColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    (canGoNext)
+                        ? Row(children: [
+                            const Expanded(
+                              child: SizedBox(),
+                            ),
+                            NeumorphicButton(
+                              onPressed: () => {hideAnswer()},
+                              style: NeumorphicStyle(
+                                shape: NeumorphicShape.flat,
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.circular(10.0)),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  vertical:
+                                      MediaQuery.of(context).size.width * 0.05),
+                              child: const Center(
+                                child: Text(
+                                  'Suivant',
+                                ),
+                              ),
+                            ),
+                            const Expanded(
+                              child: SizedBox(),
+                            ),
+                          ])
+                        : const SizedBox()
+                  ],
+                )
+              : Center(
+                  child: Column(children: [
+                  const Text('Fin de la partie'),
+                  Text('Votre score est de $score/10'),
+                ]))
+          : const Center(child: Text('Chargement de la partie')),
     );
   }
 }
