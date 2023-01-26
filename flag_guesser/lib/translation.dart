@@ -53,6 +53,53 @@ class Translation {
           default:
             return "Translation not Implemented";
         }
+      case "Game over":
+        switch (Language) {
+          case 'FR':
+            return "Fin de la partie";
+          case 'US':
+            return "Game over";
+          case 'ES':
+            return "Juego terminado";
+          case 'DE':
+            return "Spiel ist aus";
+          case 'PT':
+            return "Game Over";
+          case 'BR':
+            return "Game Over";
+          case 'NL':
+            return "Spel is over";
+          case 'IT':
+            return "Game Over";
+          case 'HU':
+            return "Játék vége";
+          case 'HR':
+            return "Igra je gotova";
+          default:
+            return "Translation not Implemented";
+        }
+      case "Next":
+        switch (Language) {
+          case 'FR':
+            return "Suivant";
+          case 'US':
+            return "Next";
+          case 'ES':
+            return "Próximo";
+          case 'DE':
+            return "Nächste";
+          case 'PT':
+            return "Next";
+          case 'BR':
+            return "Next";
+          case 'NL':
+            return "De volgende";
+          case 'IT':
+            return "seguente";
+          case 'HU':
+            return "következő";
+          case 'HR':
+            return "Sljedeći";
       case "Game loading...":
         switch (Language) {
           case 'FR':
