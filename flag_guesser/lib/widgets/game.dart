@@ -173,7 +173,7 @@ class _GameWidgetState extends State<GameWidget> {
                       height: 30,
                     ),
                     SizedBox(
-                      height: 150,
+                      height: 175,
                       child: Neumorphic(
                         margin: EdgeInsets.symmetric(
                             horizontal:
