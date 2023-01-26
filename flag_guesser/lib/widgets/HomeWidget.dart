@@ -5,6 +5,8 @@ import 'package:flag_guesser/translation.dart';
 import 'package:flag_guesser/widgets/game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flag_guesser/utils/globals.dart';
+
 import '../models.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -22,10 +24,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   SharedPreferences? prefs;
   bool displayLanguage = false;
 
-  String globalsSelectedLanguage =
-      'FR'; //langage par défaut a mettre dans les globals
-  String globalsSelectedLanguagePreferences = 'SelectedLanguage';
-
   @override
   void initState() {
     super.initState();
@@ -36,9 +34,8 @@ class _HomeWidgetState extends State<HomeWidget> {
   Future<void> loadPreferedLanguage() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      globalsSelectedLanguage =
-          prefs?.getString(globalsSelectedLanguagePreferences) ??
-              globalsSelectedLanguage;
+      selectedLanguage =
+          prefs?.getString(selectedLanguagePreferences) ?? selectedLanguage;
     });
   }
 
@@ -83,8 +80,8 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void switchLanguage(Country country) {
     setState(() {
-      globalsSelectedLanguage = country.code;
-      prefs?.setString(globalsSelectedLanguagePreferences, country.code);
+      selectedLanguage = country.code;
+      prefs?.setString(selectedLanguagePreferences, country.code);
     });
   }
 
@@ -111,7 +108,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 child: NeumorphicButton(
                   style: NeumorphicStyle(
                     border: NeumorphicBorder(
-                        color: globalsSelectedLanguage == lang.code
+                        color: selectedLanguage == lang.code
                             ? Colors.blue
                             : Colors.transparent,
                         width: 3),
@@ -167,8 +164,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          Translation.translate(
-                              "Play", globalsSelectedLanguage),
+                          Translation.translate("Play", selectedLanguage),
                           style: TextStyle(color: Colors.black),
                         )
                       ],

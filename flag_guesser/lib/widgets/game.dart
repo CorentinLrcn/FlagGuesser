@@ -6,6 +6,8 @@ import 'package:flag_guesser/utils/globals.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart' as http;
 
+import '../translation.dart';
+
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key});
 
@@ -162,9 +164,11 @@ class _GameWidgetState extends State<GameWidget> {
                           horizontal: MediaQuery.of(context).size.width * 0.05,
                           vertical: 10),
                       width: MediaQuery.of(context).size.width * 0.9,
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          'À quel pays appartient ce drapeau ?',
+                          Translation.translate(
+                              "To which country this flags belongs ?",
+                              selectedLanguage),
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
